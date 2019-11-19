@@ -1,10 +1,6 @@
 # Prestige Worldwide Parcel Delivery
 This is the repository for our database project
 
-Requires:
-* Node.js 
-* MongoDB
-
 You have to install the following:
 * [link to mongoDB install](https://docs.mongodb.com/manual/installation/)
 * [link to node.js install](https://nodejs.org/en/download/)
