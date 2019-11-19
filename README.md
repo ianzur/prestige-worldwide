@@ -7,7 +7,7 @@ You have to install the following:
 * [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
 
 ## Setup instructions
-This should work
+This will work:
 
 ```
 git clone git@github.com:ianzur/prestige-worldwide.git

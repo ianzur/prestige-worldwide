@@ -25,12 +25,13 @@
 	<br>
 
     <div class="col-md-6 main"> 
-        <form action="/sign_up" method="post">
-            <label>first name:</label><input type="text" name="fname" placeholder="First name"><br>
-            <label>last name: </label><input type="text" name="lname" placeholder="Last name"><br>
-            <label>E-mail:    </label><input type="email" name="email" placeholder="ex@mple.com"><br>
-            <label>password:  </label><input type="password" name="pass" placeholder="password"><br>
-            <input type="submit" value="create account">
+        <form action="/addUser" method="post">
+            <label>first name:</label><input type="text" name="fname" placeholder="First name" required><br>
+            <label>last name:</label><input type="text" name="lname" placeholder="Last name" required><br>
+            <label>E-mail:</label><input type="email" name="email" placeholder="ex@mple.com" required><br>
+            <label>password:</label><input type="password" name="pass" placeholder="password" required><br>
+            <label>repeat password:</label><input type="password" name="pass" placeholder="password again" required><br>
+            <input type="submit" id="submitDetails" value="create account">
         </form>
     </div>
 
