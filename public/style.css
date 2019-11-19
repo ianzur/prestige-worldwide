@@ -1,0 +1,9 @@
+label{
+    display: inline-block;
+    clear: left;
+    width: 100px;
+    text-align: left;
+}
+input {
+  display: inline-block;
+}
