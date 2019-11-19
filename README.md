@@ -13,3 +13,11 @@ You have to install the following:
 This might work: (docu says, but I haven't tried)
 
 `npm install git@github.com:ianzur/prestige-worldwide.git`
+
+## TODO:
+1. Add database function calls for:
+    - create user
+    - login
+    - track package
+2. Add testing
+3. Add AdimBro package?? 
