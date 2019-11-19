@@ -8,11 +8,16 @@ Requires:
 You have to install the following:
 * [link to mongoDB install](https://docs.mongodb.com/manual/installation/)
 * [link to node.js install](https://nodejs.org/en/download/)
+* [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
 
 ## Setup instructions
-This might work: (docu says, but I haven't tried)
+This should work
 
-`npm install git@github.com:ianzur/prestige-worldwide.git`
+```
+git clone git@github.com:ianzur/prestige-worldwide.git
+cd prestige-worldwide
+npm install
+```
 
 ## TODO:
 1. Add database function calls for:
@@ -20,4 +25,5 @@ This might work: (docu says, but I haven't tried)
     - login
     - track package
 2. Add testing
+    - user side (record time it take for request to get to user)
 3. Add AdimBro package?? 
