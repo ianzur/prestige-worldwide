@@ -25,51 +25,52 @@ var UserSchema = new mongoose.Schema({
         trim: true
       },
   },
+  
   // User may save addresses
   address: [
-      {
-          name: {
-            type: String,
-          },
-          country: {
-              type: String,
-              // we can only ship to these countrys
-              enum: [
-                  'United States', 
-                  'Spain', 
-                  'Canada', 
-                  'Mexico',
-                  'Puetro Rico', 
-                ]
-          },
-          street: {
-              type: String,
-              required: true,
-          },
-          type: {
-              type: String,
-          },
-          city: {
-              type: String,
-              required: true,
-          },
-          state: {
-              type: String,
-              required: true,              
-          },
-          zip: {
-            type: Number,
-            required: true,
-          },
-          phone: {
-              number: {
-                  type: Number
-              },
-              extension: {
-                  type: Number
-              }
-          }
+    {
+      name: {
+        type: String,
+      },
+      country: {
+        type: String,
+        // we can only ship to these countrys
+        enum: [
+          'United States', 
+          'Spain', 
+          'Canada', 
+          'Mexico',
+          'Puetro Rico', 
+        ]
+      },
+      street: {
+        type: String,
+        required: true,
+      },
+      type: {
+        type: String,
+      },
+      city: {
+        type: String,
+        required: true,
+      },
+      state: {
+        type: String,
+        required: true,              
+      },
+      zip: {
+        type: Number,
+        required: true,
+      },
+      phone: {
+        number: {
+          type: Number
+        },
+        extension: {
+          type: Number
+        }
       }
+    }
   ],
   // list of package ids to be recieved
   recieving: [
