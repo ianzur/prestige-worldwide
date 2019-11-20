@@ -46,26 +46,32 @@ app.get('/track',function(req,res){
 
 app.post('/addUser', function(req,res){ 
   console.log('POST new user to database')
-  // var fname = req.body.fname;
-  // var lname = req.body.lname; 
-  // var email =req.body.email; 
-  // var pass = req.body.password; 
+  var fname = req.body.fname;
+  var lname = req.body.lname; 
+  var email =req.body.email; 
+  var pass = req.body.psw; 
   // // var phone =req.body.phone; 
 
   console.log(req.body)
 
+  var data = { 
+      "first_name": fname, 
+      "last_name": lname,
+      "email":email, 
+      "password":pass, 
+      // "phone":phone 
+  } 
 
-  // var data = { 
-  //     "name": name, 
-  //     "email":email, 
-  //     "password":pass, 
-  //     "phone":phone 
-  // } 
-  // db.collection('details').insertOne(data,function(err, collection){ 
-  //     if (err) throw err; 
-  //     console.log("Record inserted Successfully"); 
+  db.collection('users').findOne({email: email}, function(err, collection) {
+    if (err) throw err;
+    console.log(collection.email);
+  });
+
+  db.collection('users').insertOne(data,function(err, collection){ 
+      if (err) throw err; 
+      console.log("Record inserted Successfully"); 
             
-  // }); 
+  }); 
         
-  // return res.redirect('signup_success.html'); 
+  return res.redirect('sign_in.html'); 
 }) 
