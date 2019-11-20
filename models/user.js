@@ -2,6 +2,7 @@ var mongoose = require('mongoose');
 var bcrypt = require('bcrypt');
 
 var UserSchema = new mongoose.Schema({
+
   // index by unique email
   email: {
     type: String,
@@ -10,6 +11,8 @@ var UserSchema = new mongoose.Schema({
     trim: true,
     index: true
   },
+
+  // users name 
   name: {
       first: {
         type: String,
@@ -25,7 +28,7 @@ var UserSchema = new mongoose.Schema({
         trim: true
       },
   },
-  
+
   // User may save addresses
   address: [
     {
@@ -72,25 +75,28 @@ var UserSchema = new mongoose.Schema({
       }
     }
   ],
+
   // list of package ids to be recieved
   recieving: [
       {
-          pkgID: String,
-          delivered: Boolean
+        pkgID: String,
+        delivered: Boolean
       }
   ],
 
   // list of package ids sent
   sent: [
-      {
-          pkgID: String,
-          delivered: Boolean
-      }
+    {
+      pkgID: String,
+      delivered: Boolean
+    }
   ],
+
   password: {
     type: String,
     required: true,
   }
+
 });
 
 //authenticate input against database
@@ -126,11 +132,10 @@ UserSchema.pre('save', function (next) {
   })
 });
 
-// virtual function to 
+// virtual function to return users full name
 UserSchema.virtual('fullName').get(function () {
-    return this.name.first + ' ' + this.name.middle.email.first() + '. ' + this.name.last;
+    return this.name.first + ' ' + this.name.middle.email.slice(0,1) + '. ' + this.name.last;
   });
-
 
 var User = mongoose.model('User', UserSchema);
 module.exports = User;

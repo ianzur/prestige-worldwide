@@ -20,7 +20,7 @@ var PackageSchema = new mongoose.Schema({
 		},
 		length: {
 			type: Number
-		}
+		} 
 	},
 
 	value: {
@@ -29,7 +29,6 @@ var PackageSchema = new mongoose.Schema({
 
 	// where to pick-up
 	from: {
-
 		// shipping from
 		name: {
 			type: String,
@@ -78,7 +77,6 @@ var PackageSchema = new mongoose.Schema({
 
 	// where to drop off
 	to: {
-
 		// shipping to
 		name: {
 			type: String,
@@ -114,13 +112,13 @@ var PackageSchema = new mongoose.Schema({
 			required: true,
 		},
 		phone: {
-				number: {
-					type: Number,
-					required: true
-				},
-				extension: {
-					type: Number
-				}
+			number: {
+				type: Number,
+				required: true
+			},
+			extension: {
+				type: Number
+			}
 		}
 	}, 
 
@@ -130,13 +128,14 @@ var PackageSchema = new mongoose.Schema({
 		required: true,
 	},
 
-	// current location
+	// location history
   location: [
     {
 			type: String,
 			enum: ['plane', 'airport', 'truck', 'warehouse'],
 			timestamp: {
-				type: Date
+				type: Date,
+				default: Date.now()
 			}
 		}
 	]
