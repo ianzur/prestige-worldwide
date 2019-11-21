@@ -4,6 +4,13 @@ label{
     width: 200px;
     text-align: left;
 }
+
 input {
   display: inline-block;
 }
+
+.navbar-default {
+  background-color:white;
+  background-image: none;
+  background-repeat: no-repeat;
+ }

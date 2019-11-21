@@ -17,6 +17,7 @@ npm install
 
 ## TODO:
 1. update html forms to include required information
+1. Add packages to user
 1. Add database function calls for:
     - create user
     - login

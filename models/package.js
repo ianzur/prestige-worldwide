@@ -3,29 +3,17 @@ var mongoose = require('mongoose');
 var PackageSchema = new mongoose.Schema({
 	
 	// packageID
-	id: {
-		type: String, index: true
+	id: { type: String, index: true	},
+
+	weight: { type: Number },
+
+	size: { 
+		length: { type: Number },
+		width: { type: Number },
+		height: { type: Number } 
 	},
 
-	weight: {
-		type: double
-	},
-
-	size: {
-		length: {
-			type: Number
-		},
-		length: {
-			type: Number
-		},
-		length: {
-			type: Number
-		} 
-	},
-
-	value: {
-		declared: Number
-	},
+	value: { type: Number },
 
 	// where to pick-up
 	from: {
@@ -46,32 +34,14 @@ var PackageSchema = new mongoose.Schema({
 			],
 			required: true
 		},
-		street: {
-			type: String,
-			required: true,
-		},
-		type: {
-			type: String,
-		},
-		city: {
-			type: String,
-			required: true,
-		},
-		state: {
-			type: String,
-			required: true,
-		},
-		zip: {
-			type: Number,
-			required: true,
-		},
+		street: { type: String, required: true },
+		type: {	type: String },
+		city: {	type: String, required: true },
+		state: { type: String, required: true },
+		zip: { type: Number, required: true },
 		phone: {
-			number: {
-				type: Number
-			},
-			extension: {
-				type: Number
-			}
+			number: { type: Number, required: true },
+			// extension: { type: Number }
 		}
 	},
 
@@ -80,6 +50,7 @@ var PackageSchema = new mongoose.Schema({
 		// shipping to
 		name: {
 			type: String,
+			required: true,
 		},
 		country: {
 			type: String,
@@ -90,47 +61,29 @@ var PackageSchema = new mongoose.Schema({
 				'Canada',
 				'Mexico',
 				'Puetro Rico',
-			]
+			],
+			required: true
 		},
-		street: {
-			type: String,
-			required: true,
-		},
-		type: {
-			type: String,
-		},
-		city: {
-			type: String,
-			required: true,
-		},
-		state: {
-			type: String,
-			required: true,
-		},
-		zip: {
-			type: Number,
-			required: true,
-		},
+		street: { type: String, required: true },
+		type: {	type: String },
+		city: {	type: String, required: true },
+		state: { type: String, required: true },
+		zip: { type: Number, required: true },
 		phone: {
-			number: {
-				type: Number,
-				required: true
-			},
-			extension: {
-				type: Number
-			}
+			number: { type: Number, required: true },
+			// extension: { type: Number }
 		}
 	}, 
 
 	confirm: {
-		type: bool,
+		type: Boolean,
 		default: false,
 		required: true,
 	},
 
 	// location history
-  location: [
-    {
+  	location: [
+    	{
 			type: String,
 			enum: ['plane', 'airport', 'truck', 'warehouse'],
 			timestamp: {
@@ -141,5 +94,5 @@ var PackageSchema = new mongoose.Schema({
 	]
 })
 
-var Package = mongoose.model('User', PackageSchema);
+var Package = mongoose.model('Package', PackageSchema);
 module.exports = Package;

@@ -14,27 +14,15 @@ var UserSchema = new mongoose.Schema({
 
   // users name 
   name: {
-      first: {
-        type: String,
-        required: true,
-        trim: true
-      },
-      middle: {
-        type: String,
-        trim: true
-      },
-      last: {
-        type: String,
-        trim: true
-      },
+    type: String,
+    required: true,
+    trim: true
   },
 
   // User may save addresses
   address: [
     {
-      name: {
-        type: String,
-      },
+      name: { type: String },
       country: {
         type: String,
         // we can only ship to these countrys
@@ -46,33 +34,14 @@ var UserSchema = new mongoose.Schema({
           'Puetro Rico', 
         ]
       },
-      street: {
-        type: String,
-        required: true,
-      },
-      type: {
-        type: String,
-      },
-      city: {
-        type: String,
-        required: true,
-      },
-      state: {
-        type: String,
-        required: true,              
-      },
-      zip: {
-        type: Number,
-        required: true,
-      },
+      street: { type: String, required: true, },
+      type: { type: String, },
+      city: { type: String, required: true, },
+      state: { type: String, required: true, },
+      zip: { type: Number, required: true, },
       phone: {
-        number: {
-          type: Number
-        },
-        extension: {
-          type: Number
-        }
-      }
+        number: { type: Number },
+       }
     }
   ],
 
@@ -131,11 +100,6 @@ UserSchema.pre('save', function (next) {
     next();
   })
 });
-
-// virtual function to return users full name
-UserSchema.virtual('fullName').get(function () {
-    return this.name.first + ' ' + this.name.middle.email.slice(0,1) + '. ' + this.name.last;
-  });
 
 var User = mongoose.model('User', UserSchema);
 module.exports = User;
