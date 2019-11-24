@@ -90,5 +90,8 @@ app.use(expressValidator())
 require('./routes/routes.js')(app, passport); // load our routes and pass in our app and configured passport
 
 // launch app
+
+
+
 app.listen(port);
 console.log('site launched at: ' + ('http://localhost:' + String(port)).cyan);
