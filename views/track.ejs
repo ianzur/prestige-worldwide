@@ -1,0 +1,77 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <title>Track Package</title>
+</head>
+<body>
+<div class="container" style="padding-top: 15px;">
+
+    <!-- Welcome Banner -->
+    <div class="d-flex justify-content-between">
+        <h1>Welcome, <%= user.name.first %>!</h1>
+        <div class="col align-self-top col-sm-1">
+            <a href="/logout" class="btn btn-outline-secondary btn-sm" type="button">log-out</a>
+        </div>
+    </div>
+
+    <!-- navigation tabs -->
+    <ul class="nav nav-tabs nav-fill">
+        <li class="nav-item">
+            <a class="nav-link" href="/profile">My Account</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/ship">Ship Package</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link active" href="/track">Track Package</a>
+        </li>
+    </ul>
+    
+    <br>
+    <!-- display any error messages, if they exist -->
+    <% if(locals.messages.error) { %>
+        <% for(var i=0; i < locals.messages.error.length; i++) { %>
+        <div class="alert alert-danger" role="alert">
+            <strong><%=locals.messages.error[i]%></strong>
+        </div>
+        <% } %>
+    <% } %>
+
+    <!-- display any success messages, if they exist -->
+    <% if(locals.messages.success) { %>
+        <% for(var i=0; i < locals.messages.success.length; i++) { %>
+        <div class="alert alert-success" role="alert">
+            <strong><%=locals.messages.success[i]%></strong>
+        </div>
+        <% } %>
+    <% } %>
+    <br>
+
+    <div class="row">
+
+        <!-- Tracking INFORMATION -->
+        <div class="col-sm-12">
+            <div class="jumbotron">
+                <h2>Track Packages</h2>
+                    <p>
+                       Put packages here (if they exist) stuff here
+                    </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-right">
+        <pre>
+            CSCE 5350 - Database Systems Project
+            Ian Zurutuza + Sheetal Khatri
+        </pre>
+    </div>
+
+</div>
+</body>
+</html>

@@ -1,90 +1,94 @@
+// server.js
 
-console.log('Server-side code running');
+/** Define constants for mongoDB connection
+ *  You may need to change mongoURI if you did not use default mongo set-up
+ */
+const mongoURI = 'mongodb://localhost:27017/test' // 27027 default mongoDB port database name = 'test'
+const port = process.env.PORT || 8080; // use port 8080 unless a preconfigure port exists
 
-const express = require('express');
-const mongoose = require('mongoose');
-const path = require('path') 
-const bodyParser = require('body-parser');
+/* Import required packages */
+const bodyParser = require('body-parser'); // package to handle form input from user
+const colors = require('colors'); // because I like colored console messages
+const express  = require('express'); // simple web framework to make my life easier 
+const expressValidator = require('express-validator'); // middleware to validate user input on server-side
+const flash = require('express-flash'); // middleware for handling single read messages to the client
+const mongoose = require('mongoose'); 
+const morgan = require('morgan'); // for logging requests
+const passport = require('passport'); // package to keep authentication simple
+const session = require('express-session'); // package to persist user data server-side by saving an ID in the clients cookies 
 
-
-const app = express();
-
-app.use(bodyParser.urlencoded({extended: false}));
-
-// serve files from the public directory
-app.use(express.static(path.join(__dirname, 'public')));
-
-mongoose.connect('mongodb://localhost:27017/test', { useNewUrlParser: true, useUnifiedTopology: true })
-mongoose.set('useCreateIndex', true);
-
-var User = require('./models/user');
-var Package = require('./models/package');
-
-var db=mongoose.connection; 
-
-app.listen(8080, () => console.log(`app running at http://127.0.0.1:8080`))
-
-// Routes
-app.get('/',function(req,res){ 
-  return res.redirect('./index.html'); 
+/* Configure and connect to mongodb with mongoose package */
+// listen for connection success
+mongoose.connection.on("open", function(ref) {
+    return console.log("Connected to mongo server!".green);
 });
 
-app.get('/signup',function(req,res){ 
-  const click = {clickTime: new Date()};
-  console.log('signup @' + click.clickTime);
-
-  return res.redirect('./sign_up.html'); 
+// listen for connection error
+mongoose.connection.on("error", function(err) {
+    console.log("Could not connect to mongo server!".yellow);
+    return console.log(err.message.red);
 });
 
-app.get('/signin',function(req,res){ 
-  const click = {clickTime: new Date()};
-  console.log('signin @' + click.clickTime);
+// define connection options
+const options = {
+    useNewUrlParser: true, // use new parser (underlying mongoDB driver has depriciated)
+    useUnifiedTopology: true,
+    useCreateIndex: true, // use createindex() instead of ensureindex() 
+    useFindAndModify: false,
+    autoIndex: true, // Don't build indexes
+    reconnectTries: Number.MAX_VALUE, // Never stop trying to reconnect
+    reconnectInterval: 500, // Reconnect every 500ms
+    poolSize: 10, // Maintain up to 10 socket connections
+    // If not connected, return errors immediately rather than waiting for reconnect
+    bufferMaxEntries: 0,
+    connectTimeoutMS: 2500, // Give up initial connection after 10 seconds
+    socketTimeoutMS: 45000, // Close sockets after 45 seconds of inactivity       
+    family: 4 // Use IPv4, skip trying IPv6
+}
 
-  return res.redirect('./sign_in.html'); 
-});
+// connect to mongodb, catch any errors here with a more specific error message
+mongoose.connect(mongoURI, options)
+    .then(() => console.log("established connection to local mongoDB instance at: " + mongoURI.cyan))
+    .catch(err => console.log("failed initial connection to mongoDB. Did you start mongod.service?"))
 
-app.get('/track',function(req,res){ 
-  const click = {clickTime: new Date()};
-  console.log('track @' + click.clickTime);
+// tell mongoose to use ES6-Promise for asynchronous commands
+mongoose.Promise = global.Promise
 
-  return res.redirect('./track_package.html'); 
-});
+// 
+require('./config/passport')(passport); 
 
-app.post('/registerUser', function(req,res){ 
+/** create expressapp */
+const app = express()
 
-  var user = new User(
-    {
-      name: req.body.name,
-      email: req.body.email,
-      password: req.body.psw
-    });
+app.use(morgan('dev')); // formate logger output
+app.use(bodyParser.json()); // get information from html forms
+app.use(bodyParser.urlencoded({ extended: true }));
 
-  console.log(user)
+app.set('view engine', 'ejs'); // set up ejs for templating
 
-  // console.log('POST new user to database')
-  // var fname = req.body.fname;
-  // var lname = req.body.lname; 
-  // var email =req.body.email; 
-  // var pass = req.body.psw; 
-  // // var phone =req.body.phone; 
+app.use(session({
+    secret: 'aReallYbiGsecRet', // session secret
+    resave: true,
+    saveUninitialized: true
+}));
 
-  console.log(req.body)
+// required for passport
+app.use(passport.initialize());
+app.use(passport.session()); // persistent login sessions
 
-  // var data = { 
-  //     "first_name": fname, 
-  //     "last_name": lname,
-  //     "email":email, 
-  //     "password":pass, 
-  // } 
+app.use(flash()); // use express-flash for flash messages stored in session
+app.use(expressValidator())
 
-  db.collection('users').findOne({email: email}, function(err, collection) {
-    if (err) throw err;
-    console.log(collection.email);
-  });
+// // Custom flash middleware -- from Ethan Brown's book, 'Web Development with Node & Express'
+// app.use(function(req, res, next){
+//     // if there's a flash message in the session request, make it available in the response, then delete it
+//     res.locals.sessionFlash = req.session.sessionFlash;
+//     delete req.session.sessionFlash;
+//     next();
+// });
 
-  db.collection('users').insertOne(data,function(err, collection){ 
-      if (err) throw err; 
-      console.log("Record inserted Successfully"); 
-  }); 
+require('./routes/routes.js')(app, passport); // load our routes and pass in our app and configured passport
 
-}) 
+// launch app
+app.listen(port);
+console.log('site launched at: ' + ('http://localhost:' + String(port)).cyan);

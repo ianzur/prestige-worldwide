@@ -1,0 +1,50 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    
+    <title>Prestige Worldwide</title>
+</head>
+<body>
+<div class="container" style="padding-top: 15px;">
+    <div class="jumbotron">
+        <h1>Prestige Worldwide</h1>
+        <h2>Parcel Delivery Service</h2>
+
+        <!-- display any error messages, if they exist -->
+        <% if(locals.messages.error) { %>
+            <% for(var i=0; i < locals.messages.error.length; i++) { %>
+            <div class="alert alert-danger" role="alert">
+                <strong><%=locals.messages.error[i]%></strong>
+            </div>
+            <% } %>
+        <% } %>
+
+        <!-- display any success messages, if they exist -->
+        <% if(locals.messages.success) { %>
+            <% for(var i=0; i < locals.messages.success.length; i++) { %>
+            <div class="alert alert-success" role="alert">
+                <strong><%=locals.messages.success[i]%></strong>
+            </div>
+            <% } %>
+        <% } %>
+        <br>
+
+        <p>Please Login or Register:</p>
+        <a href="/login" class="btn btn-primary">Login</a>
+        <a href="/signup" class="btn btn-primary">Register</a>
+    </div>
+
+    <div class="text-right">
+        <pre>
+            CSCE 5350 - Database Systems Project
+            Ian Zurutuza + Sheetal Khatri
+        </pre>
+    </div>
+
+</div>
+</body>
+</html>

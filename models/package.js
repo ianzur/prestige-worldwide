@@ -41,7 +41,6 @@ var PackageSchema = new mongoose.Schema({
 		zip: { type: Number, required: true },
 		phone: {
 			number: { type: Number, required: true },
-			// extension: { type: Number }
 		}
 	},
 
@@ -94,5 +93,4 @@ var PackageSchema = new mongoose.Schema({
 	]
 })
 
-var Package = mongoose.model('Package', PackageSchema);
-module.exports = Package;
+module.exports = mongoose.model('Package', PackageSchema);
