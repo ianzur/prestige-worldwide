@@ -32,6 +32,7 @@ var PackageSchema = new mongoose.Schema({
 				'Mexico',
 				'Puetro Rico',
 			],
+			default: 'United States',
 			required: true
 		},
 		street: { type: String, required: true },
@@ -40,8 +41,15 @@ var PackageSchema = new mongoose.Schema({
 		state: { type: String, required: true },
 		zip: { type: Number, required: true },
 		phone: {
-			number: { type: Number, required: true },
-		}
+			type: String,
+			validate: {
+			  validator: function(v) {
+				return /\d{3}-\d{3}-\d{4}/.test(v);
+			  },
+			  message: props => `${props.value} is not a valid phone number!`
+			},
+			required: [true, 'User phone number required']
+		},
 	},
 
 	// where to drop off
@@ -61,6 +69,7 @@ var PackageSchema = new mongoose.Schema({
 				'Mexico',
 				'Puetro Rico',
 			],
+			default: 'United States',
 			required: true
 		},
 		street: { type: String, required: true },
@@ -69,9 +78,15 @@ var PackageSchema = new mongoose.Schema({
 		state: { type: String, required: true },
 		zip: { type: Number, required: true },
 		phone: {
-			number: { type: Number, required: true },
-			// extension: { type: Number }
-		}
+			type: String,
+			validate: {
+			  validator: function(v) {
+				return /\d{3}-\d{3}-\d{4}/.test(v);
+			  },
+			  message: props => `${props.value} is not a valid phone number!`
+			},
+			required: [true, 'User phone number required']
+		},
 	}, 
 
 	confirm: {
@@ -87,8 +102,10 @@ var PackageSchema = new mongoose.Schema({
 			enum: ['plane', 'airport', 'truck', 'warehouse'],
 			timestamp: {
 				type: Date,
-				default: Date.now()
-			}
+				default: Date.now(),
+				required: true
+			},
+			required: true
 		}
 	]
 })

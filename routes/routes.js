@@ -1,3 +1,5 @@
+var Package = require('../models/package');
+
 module.exports = function(app, passport) {
 
 // normal routes ===============================================================
@@ -34,6 +36,22 @@ module.exports = function(app, passport) {
     });
 
     app.post('/ship', isLoggedIn, function(req, res, done) {
+
+        // Validate input
+        console.log(req.body)
+        var errors = req.validationErrors();
+
+        // handle data validation errors
+        if (errors) {
+            var messages = [];
+            errors.forEach(function(error){
+                messages.push(error.msg);
+            });
+            return done(null, false, req.flash('error', messages));
+        }
+        
+        let newPackage = new Package();
+        
         req.flash('success', 'Package shipped! (added to database)');
         res.redirect('/track');
     });

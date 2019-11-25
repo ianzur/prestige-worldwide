@@ -16,12 +16,8 @@ npm install
 ```
 
 ## TODO:
-1. update html forms to include required information
-1. Add packages to user
-1. Add database function calls for:
-    - create user
-    - login
-    - track package
+1. Add ship package backend
+2. Add track package front and back
 2. Add testing
     - user side (record time it take for request to get to user)
 3. Add AdimBro package?? 
