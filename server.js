@@ -95,14 +95,6 @@ app.use(responseTime(function (req, res, time) {
     stats.timing(stat, time)
 })); 
 
-// // Custom flash middleware -- from Ethan Brown's book, 'Web Development with Node & Express'
-// app.use(function(req, res, next){
-//     // if there's a flash message in the session request, make it available in the response, then delete it
-//     res.locals.sessionFlash = req.session.sessionFlash;
-//     delete req.session.sessionFlash;
-//     next();
-// });
-
 require('./routes/routes.js')(app, passport); // load our routes and pass in our app and configured passport
 
 // launch app
