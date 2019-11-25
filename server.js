@@ -16,6 +16,14 @@ const mongoose = require('mongoose');
 const morgan = require('morgan'); // for logging requests
 const passport = require('passport'); // package to keep authentication simple
 const session = require('express-session'); // package to persist user data server-side by saving an ID in the clients cookies 
+const responseTime = require('response-time') //package to record response time for requests
+const StatsD = require('node-statsd') // package to calculate statistics
+
+var stats = new StatsD()
+
+stats.socket.on('error', function (error) {
+    console.error(error.stack)
+});
 
 /* Configure and connect to mongodb with mongoose package */
 // listen for connection success
@@ -78,6 +86,14 @@ app.use(passport.session()); // persistent login sessions
 
 app.use(flash()); // use express-flash for flash messages stored in session
 app.use(expressValidator())
+
+// define how to print response time to terminal
+app.use(responseTime(function (req, res, time) {
+    var stat = (req.method + req.url).toLowerCase()
+      .replace(/[:.]/g, '')
+      .replace(/\//g, '_')
+    stats.timing(stat, time)
+})); 
 
 // // Custom flash middleware -- from Ethan Brown's book, 'Web Development with Node & Express'
 // app.use(function(req, res, next){

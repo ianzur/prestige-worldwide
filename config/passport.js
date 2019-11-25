@@ -82,10 +82,10 @@ module.exports = function(passport) {
         console.log(req.body.passwordConfirm, password)
 
         // validate data before appending to database
-        req.checkBody('email').isEmail().withMessage('Misformatted email');
-        req.checkBody('password').isLength({ min: 5 }).withMessage('Password must be >5 characters long');
-        req.checkBody('passwordConfirm').equals(password).withMessage('password doesn\'t match');
-        req.checkBody('firstName').exists().withMessage('first name required');
+        // req.checkBody('email').isEmail().withMessage('Misformatted email');
+        // req.checkBody('password').isLength({ min: 5 }).withMessage('Password must be >5 characters long');
+        // req.checkBody('passwordConfirm').equals(password).withMessage('password doesn\'t match');
+        // req.checkBody('firstName').isLength({ min: 1 }).withMessage('first name required');
 
         var errors = req.validationErrors();
 

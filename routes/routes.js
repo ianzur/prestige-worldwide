@@ -1,3 +1,5 @@
+const { check, validationResult } = require('express-validator/check');
+
 var Package = require('../models/package');
 
 module.exports = function(app, passport) {
@@ -35,7 +37,14 @@ module.exports = function(app, passport) {
         });
     });
 
-    app.post('/ship', isLoggedIn, function(req, res, done) {
+    app.post('/ship', [
+        isLoggedIn,
+        check('nameTo').isLength({ min: 1 }).withMessage('Must contain name'),
+        check('nameTo').isLength({ min: 1 }).withMessage('Must contain name'),
+    ], function(req, res) {
+
+        console.log(req.body.nameFrom == req.user.fullName);
+
 
         // Validate input
         console.log(req.body)
@@ -47,13 +56,19 @@ module.exports = function(app, passport) {
             errors.forEach(function(error){
                 messages.push(error.msg);
             });
-            return done(null, false, req.flash('error', messages));
+            console.log(messages)
+            req.flash('error', messages);
+            res.redirect('/ship');
+        }
+        else {
+              // let newPackage = new Package();
+        
+            req.flash('success', 'Package shipped! (added to database)');
+            res.redirect('/track');
+
         }
         
-        let newPackage = new Package();
-        
-        req.flash('success', 'Package shipped! (added to database)');
-        res.redirect('/track');
+      
     });
 
     // LOGOUT ==============================
@@ -87,8 +102,12 @@ module.exports = function(app, passport) {
     });
 
     // process the signup form
-    app.post('/signup',  
-        passport.authenticate('signup', {
+    app.post('/signup', [
+        check('email').isEmail().withMessage('Misformatted email'),
+        check('password').isLength({ min: 5 }).withMessage('Password must be >5 characters long'),
+        // check('passwordConfirm').equals(password).withMessage('password doesn\'t match'),
+        check('firstName').isLength({ min: 1 }).withMessage('first name required'),
+    ], passport.authenticate('signup', {
                 successRedirect: '/profile', // redirect to the secure profile section
                 successFlash: 'Account created!',
                 failureRedirect: '/signup', // redirect back to the signup page if there is an error
