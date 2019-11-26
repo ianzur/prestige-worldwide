@@ -280,14 +280,6 @@ module.exports = function(app, passport) {
         // since no error redirect to home page
         res.redirect('/');
     });
-
-
-// Todo: ship package
-
-
-// Todo track package
-
-
 };
 
 // route middleware to ensure user is logged in

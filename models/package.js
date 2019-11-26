@@ -93,10 +93,10 @@ var PackageSchema = new mongoose.Schema({
 	],
 });
 
-PackageSchema.path('locations.timestamp').validate( function(v) {
-	console.log(v)
-	console.log(this.locations)
-})
+// PackageSchema.path('locations.timestamp').validate( function(v) {
+// 	console.log(v)
+// 	console.log(this.locations)
+// })
 
 // PackageSchema.query.locations
 
@@ -119,7 +119,7 @@ PackageSchema.pre('validate', function(next) {
 			'timestamp': date.setDate(date.getDate() + 1)  
 		})
 	}
-	console.log(this)
+	
 	next()
 });
 
