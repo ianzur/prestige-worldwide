@@ -59,7 +59,7 @@ userSchema.virtual('readablePhone').get( function () {
     var emptyString = "";
     var phoneNumber = this.phone.number;
 
-    if (phoneNumber.length >= 10) { // remove country code
+    if (phoneNumber.length > 10) { // remove country code
         var countryCode = phoneNumber.length - 10
         emptyString = emptyString.concat('+', phoneNumber.substring(0,countryCode), ' ')
         phoneNumber = phoneNumber.substring(countryCode)
