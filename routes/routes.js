@@ -2,6 +2,15 @@ const { check, validationResult } = require('express-validator');
 
 var Package = require('../models/package');
 
+// to check if object is empty
+Object.prototype.isEmpty = function() {
+    for(var key in this) {
+        if(this.hasOwnProperty(key))
+            return false;
+    }
+    return true;
+}
+
 module.exports = function(app, passport) {
 
     // show the home page (will also have our login links)
@@ -22,22 +31,11 @@ module.exports = function(app, passport) {
     // TRACK PACKAGE
     app.get('/track', [
         isLoggedIn,
-    ], function(req, res) {
-        res.render('track.ejs', {
-            user : req.user,
-            messages: req.flash(),
-            pkgs: [],
-        });
-    });
-
-    app.get('/track/:', [
-        isLoggedIn,
         check('pkgID')
             .optional({ nullable: true, checkFalsy: true})
             .isAlphanumeric().withMessage('package ID only contains letters and numbers')
             .isLength({ min: 24, max: 24 }).withMessage('package ID is incorrect length'),
     ], function(req, res) {
-
         var query = {}
         
         // handle data validation errors
@@ -52,33 +50,97 @@ module.exports = function(app, passport) {
             res.redirect('/track');
         } else { // no data errors -> build query string and query data
 
-            if (req.query.pkgID !== '') {
+            // if no id specified
+            if (req.query.pkgID !== undefined && req.query.pkgID !== '') {
                 query['_id'] = req.query.pkgID
             }
 
+            // search either from or to?
             if (req.query.radioOptions === 'from.email') {
                 query['from.email'] = req.user.email;
             } else if (req.query.radioOptions === 'to.email') {
                 query['to.email'] = req.user.email;
-            }
+            } 
 
+            // Future
             // if (req.query.delivered) {
             //     query['delivered'] = true;
             // }
 
-            Package.find(query).exec(
-                function(err, items) {
-                    if (err) { return res.send(500, err) }
-                    if (items) {
-                        res.render('track.ejs', {
-                            user : req.user,
-                            messages: req.flash(),
-                            pkgs: items,
-                        });
-                    }
+            // console.log(req.query.pkgID);
+            // console.log(query);
+            // console.log(Object.entries(query).length);
+
+            // if there is no query, don't search
+            if (query.isEmpty()) {
+                res.render('track.ejs', {
+                    user : req.user,
+                    messages: req.flash(),
+                    pkgs: [],
                 });
+            } else { // there is a query, so search
+                Package.find(query).exec(
+                    function(err, items) {
+                        if (err) { return res.send(500, err) }
+                            if (items) {
+                                res.render('track.ejs', {
+                                    user : req.user,
+                                    messages: req.flash(),
+                                    pkgs: items,
+                                });
+                            }
+                    });
+            }
+            
         }     
     });
+
+    // app.get('/track/:', [
+    //     isLoggedIn,
+        
+    // ], function(req, res) {
+
+    //     var query = {}
+        
+    //     // handle data validation errors
+    //     var errors = validationResult(req);
+    //     if (!errors.isEmpty()) {
+    //         var messages = [];
+    //         errors.array().forEach(function(error){
+    //             console.log(error);
+    //             messages.push(error.msg);
+    //         });
+    //         req.flash('error', messages);
+    //         res.redirect('/track');
+    //     } else { // no data errors -> build query string and query data
+
+    //         if (req.query.pkgID !== '') {
+    //             query['_id'] = req.query.pkgID
+    //         }
+
+    //         if (req.query.radioOptions === 'from.email') {
+    //             query['from.email'] = req.user.email;
+    //         } else if (req.query.radioOptions === 'to.email') {
+    //             query['to.email'] = req.user.email;
+    //         }
+
+    //         // if (req.query.delivered) {
+    //         //     query['delivered'] = true;
+    //         // }
+
+    //         Package.find(query).exec(
+    //             function(err, items) {
+    //                 if (err) { return res.send(500, err) }
+    //                 if (items) {
+    //                     res.render('track.ejs', {
+    //                         user : req.user,
+    //                         messages: req.flash(),
+    //                         pkgs: items,
+    //                     });
+    //                 }
+    //             });
+    //     }     
+    // });
   
     // SHIP PACKAGE
     app.get('/ship', isLoggedIn, function(req, res) {
@@ -285,7 +347,7 @@ module.exports = function(app, passport) {
 // route middleware to ensure user is logged in
 // https://github.com/jaredhanson/passport
 function isLoggedIn(req, res, next) {
-    console.log('authCheck isLoggedIn() => ' + req.isAuthenticated());
+    // console.log('authCheck isLoggedIn() => ' + req.isAuthenticated());
 
     // test if request is authenticated
     if (req.isAuthenticated())
