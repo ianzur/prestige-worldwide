@@ -1,4 +1,5 @@
-// load all the things we need
+// required packages
+const { check, validationResult } = require('express-validator');
 var LocalStrategy = require('passport-local').Strategy;
 
 // load up the user model
@@ -29,43 +30,30 @@ module.exports = function(passport) {
         passReqToCallback : true // allows us to pass in the req from our route (lets us check if a user is logged in or not)
     },
     function(req, email, password, done) {
-        if (email) {
-            email = email.toLowerCase(); // Use lower-case e-mails to avoid case-sensitive e-mail matching
-        }
-
-        // validate data before search database
-        req.checkBody('email').isEmail().withMessage('Please enter your email');
-        req.checkBody('password').notEmpty().withMessage('Please enter your password');
-
-        var errors = req.validationErrors();
 
         // handle data validation errors
-        if (errors) {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
             var messages = [];
-            errors.forEach(function(error){
+            errors.array().forEach(function(error){
                 messages.push(error.msg);
             });
             return done(null, false, req.flash('error', messages));
         }
-
+ 
+        // look in database for user
         process.nextTick(function() {
             User.findOne({ 'email' :  email }, function(err, user) {
-                // if there are any errors, return the error
-                if (err)
-                    return done(err);
-
-                // if no user is found, return the message
-                if (!user)
+                if (err) { return done(err); }  
+                if (!user) { // user not found
                     return done(null, false, req.flash('error', 'User does not exist.'));
-
-                if (!user.validPassword(password))
+                }
+                if (!user.verifyPassword(password)) {  // incorrect password
                     return done(null, false, req.flash('error', 'Incorrect password.'));
-
-                // no errors, so return user
-                return done(null, user);
+                }
+                return done(null, user); // no errors -> return user
             });
         });
-
     }));
 
     // Create new user 
@@ -76,63 +64,41 @@ module.exports = function(passport) {
     },
     function(req, email, password, done) {
 
-        if (email)
-            email = email.toLowerCase(); // Use lower-case e-mails to avoid case-sensitive e-mail matching
-
-        console.log(req.body.passwordConfirm, password)
-
-        // validate data before appending to database
-        // req.checkBody('email').isEmail().withMessage('Misformatted email');
-        // req.checkBody('password').isLength({ min: 5 }).withMessage('Password must be >5 characters long');
-        // req.checkBody('passwordConfirm').equals(password).withMessage('password doesn\'t match');
-        // req.checkBody('firstName').isLength({ min: 1 }).withMessage('first name required');
-
-        var errors = req.validationErrors();
-
         // handle data validation errors
-        if (errors) {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
             var messages = [];
-            errors.forEach(function(error){
+            errors.array().forEach(function(error){
                 messages.push(error.msg);
             });
             return done(null, false, req.flash('error', messages));
         }
+
+        console.log(req.body.phone)
  
+        // check if user exists
         process.nextTick(function() {
-            // if the user is not already logged in:
-            if (!req.user) {
-                User.findOne({ 'email' :  email }, function(err, user) {
-                    // if there are any errors, return the error
-                    if (err)
-                        return done(err);
+            User.findOne({ 'email' :  email }, function(err, user) {
+                if (err) { return done(err); }
+                if (user) { // if the user already exists 
+                    return done(null, false, req.flash('error', 'That email is already taken.'));
+                } else { // else create the user
+                    let newUser = new User();
 
-                    // check to see if theres already a user with that email
-                    if (user) {
-                        return done(null, false, req.flash('error', 'That email is already taken.'));
-                    } else {
+                    newUser.name.first = req.body.firstName;
+                    newUser.name.middle = req.body.middleName;
+                    newUser.name.last = req.body.lastName;
+                    newUser.phone.number = req.body.phone;
+                    newUser.phone.ext = req.body.ext;
+                    newUser.email = email;
+                    newUser.password = newUser.generateHash(password);
 
-                        // create the user
-                        let newUser = new User();
-
-                        newUser.name.first = req.body.firstName;
-                        newUser.name.middle = req.body.middleName;
-                        newUser.name.middle = req.body.lastName;
-                        newUser.phone = req.body.phone;
-                        newUser.email = email;
-                        newUser.password = newUser.generateHash(password);
-
-                        newUser.save(function(err) {
-                            if (err)
-                                return done(err);
-
-                            return done(null, newUser);
-                        });
-                    }
-                });
-            } else {
-                // user is logged in and already has a local account. Ignore signup. (You should log out before trying to create a new account, user!)
-                return done(null, req.user);
-            }
+                    newUser.save(function(err) {
+                        if (err) { return done(err); }
+                        return done(null, newUser);
+                    });
+                }
+            });
         });
     }));
 };

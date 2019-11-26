@@ -22,7 +22,7 @@
     <!-- navigation tabs -->
     <ul class="nav nav-tabs nav-fill">
         <li class="nav-item">
-            <a class="nav-link active" href="/profile">My Account</a>
+            <a class="nav-link active" href="/profile" style="background-color:#E9ECEF;"><strong>My Account</strong></a>
         </li>
         <li class="nav-item">
             <a class="nav-link" href="/ship">Ship Package</a>
@@ -32,38 +32,39 @@
         </li>
     </ul>
     
-    <br>
-
-    <!-- display any error messages, if they exist -->
-    <% if(locals.messages.error) { %>
-        <% for(var i=0; i < locals.messages.error.length; i++) { %>
-        <div class="alert alert-danger" role="alert">
-            <strong><%=locals.messages.error[i]%></strong>
-        </div>
-        <% } %>
-    <% } %>
-
-    <!-- display any success messages, if they exist -->
-    <% if(locals.messages.success) { %>
-        <% for(var i=0; i < locals.messages.success.length; i++) { %>
-        <div class="alert alert-success" role="alert">
-            <strong><%=locals.messages.success[i]%></strong>
-        </div>
-        <% } %>
-    <% } %>
-    <br>
-
-    <div class="row">
+       <div class="row">
 
         <!-- USER INFORMATION -->
         <div class="col-sm-12">
             <div class="jumbotron">
                 <h2>User Information</h2>
+
+                <br>
+
+                <!-- display any error messages, if they exist -->
+                <% if(locals.messages.error) { %>
+                    <% for(var i=0; i < locals.messages.error.length; i++) { %>
+                    <div class="alert alert-danger" role="alert">
+                        <strong><%=locals.messages.error[i]%></strong>
+                    </div>
+                    <% } %>
+                <% } %>
+            
+                <!-- display any success messages, if they exist -->
+                <% if(locals.messages.success) { %>
+                    <% for(var i=0; i < locals.messages.success.length; i++) { %>
+                    <div class="alert alert-success" role="alert">
+                        <strong><%=locals.messages.success[i]%></strong>
+                    </div>
+                    <% } %>
+                <% } %>
+                <br>
+
                     <p>
                         <strong>id</strong>: <%= user._id %><br>
                         <strong>full name</strong>: <%= user.fullName %><br>
                         <strong>email</strong>: <%= user.email %><br>
-                        <strong>phone</strong>: <%= user.phone %><br>
+                        <strong>phone</strong>: <%= user.readablePhone %><br>
                         <strong>hashed password</strong>: <%= user.password %><br>
                         <strong>email authenticated</strong>: <%= user.email_authenticated %><br>
                     </p>

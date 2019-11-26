@@ -25,32 +25,12 @@
             <a class="nav-link " href="/profile">My Account</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link active" href="/ship">Ship Package</a>
+            <a class="nav-link active" href="/ship" style="background-color:#E9ECEF;"><strong>Ship Package</strong></a>
         </li>
         <li class="nav-item">
             <a class="nav-link" href="/track">Track Package</a>
         </li>
     </ul>
-    
-    <br>
-    <!-- display any error messages, if they exist -->
-    <% if(locals.messages.error) { %>
-        <% for(var i=0; i < locals.messages.error.length; i++) { %>
-        <div class="alert alert-danger" role="alert">
-            <strong><%=locals.messages.error[i]%></strong>
-        </div>
-        <% } %>
-    <% } %>
-
-    <!-- display any success messages, if they exist -->
-    <% if(locals.messages.success) { %>
-        <% for(var i=0; i < locals.messages.success.length; i++) { %>
-        <div class="alert alert-success" role="alert">
-            <strong><%=locals.messages.success[i]%></strong>
-        </div>
-        <% } %>
-    <% } %>
-    <br>
 
     <div class="row">
 
@@ -58,6 +38,24 @@
         <div class="col-sm-12">
             <div class="jumbotron">
                 <h3>Please fill the following fields to ship a package.</h3>
+                <br>
+                <!-- display any error messages, if they exist -->
+                <% if(locals.messages.error) { %>
+                    <% for(var i=0; i < locals.messages.error.length; i++) { %>
+                    <div class="alert alert-danger" role="alert">
+                        <strong><%=locals.messages.error[i]%></strong>
+                    </div>
+                    <% } %>
+                <% } %>
+
+                <!-- display any success messages, if they exist -->
+                <% if(locals.messages.success) { %>
+                    <% for(var i=0; i < locals.messages.success.length; i++) { %>
+                    <div class="alert alert-success" role="alert">
+                        <strong><%=locals.messages.success[i]%></strong>
+                    </div>
+                    <% } %>
+                <% } %>
                 <br>
                 <!--  from address -->
                 <h5>Where are you shipping from?</h5>
@@ -73,7 +71,7 @@
                         </div>
                         <div class="form-group col-md-4">
                             <label for="phone">Phone</label>
-                            <input type="tel" class="form-control" value="<%= user.phone %>" name="phoneFrom" placeholder="'469-666-3456'" pattern="\d{3}-\d{3}-\d{4}" required>
+                            <input type="tel" class="form-control" value="<%= user.readablePhone %>" name="phoneFrom" placeholder="'469-666-3456'" required>
                         </div>
                     </div>
                     <div class="form-group">
@@ -99,9 +97,16 @@
                         </select> -->
                         </div>
                         <div class="form-group col-md-2">
-                            <label for="inputZip">Zip | Postal Code</label>
+                            <label for="inputZip">Postal Code</label>
                             <input type="text" class="form-control" value="76207" name="zipFrom" required>
                         </div>
+                    </div>
+                    <div class="form-row">
+                        <label for=countryFrom>Country</label>
+                        <select class="form-control" name=countryFrom>
+                            <option>United States</option>
+                            <option>Spain</option>
+                        </select>
                     </div>
                     
                     <hr>
@@ -120,7 +125,7 @@
                         </div>
                         <div class="form-group col-md-4">
                             <label for="phone">Phone</label>
-                            <input type="tel" class="form-control" value="123-456-7890" name="phoneTo" placeholder="'469-666-3456' or '3336669999'" pattern="\d{3}-?\d{3}-?\d{4}" required>
+                            <input type="tel" class="form-control" value="123-456-7890" name="phoneTo" placeholder="'469-666-3456' or '3336669999'" required>
                         </div>
                     </div>
                     <div class="form-group">
@@ -138,7 +143,7 @@
                         </div>
                         <div class="form-group col-md-4">
                             <label for="inputState">State | Province</label>
-                            <input type="text" class="form-control" value="Texas" sname="stateTo" required>
+                            <input type="text" class="form-control" value="Texas" name="stateTo" required>
                         <!-- future: select state or province To list -->
                         <!-- <select name="inputState" class="form-control">
                             <option selected>Choose...</option>
@@ -146,9 +151,16 @@
                         </select> -->
                         </div>
                         <div class="form-group col-md-2">
-                            <label for="inputZip">Zip | Postal Code</label>
+                            <label for="inputZip">Postal Code</label>
                             <input type="text" class="form-control" value="75032" name="zipTo" required>
                         </div>
+                    </div>
+                    <div class="form-row">
+                        <label for=countryTo>Country</label>
+                        <select class="form-control" name=countryTo>
+                            <option>United States</option>
+                            <option>Spain</option>
+                        </select>
                     </div>
                     <hr>
                 
@@ -157,25 +169,35 @@
                     <div class="form-row">
                         <div class="form-group col-md">
                             <label for="weight">weight</label>
-                            <input type="number" class="form-control" name="weight (lbs)" placeholder="lbs">
+                            <input type="text" class="form-control" name="weight (lbs)" placeholder="lbs">
                         </div>
                         <div class="form-group col-md">
                             <label for="email">width</label>
-                            <input type="number" class="form-control" name="width" placeholder="inches">
+                            <input type="text" class="form-control" name="width" placeholder="inches">
                         </div>
                         <div class="form-group col-md">
                             <label for="length">length</label>
-                            <input type="number" class="form-control" name="length" placeholder="inches">
+                            <input type="text" class="form-control" name="length" placeholder="inches">
                         </div>
                         <div class="form-group col-md">
                             <label for="height">height</label>
-                            <input type="number" class="form-control" name="height" placeholder="inches">
+                            <input type="text" class="form-control" name="height" placeholder="inches">
                         </div>
                     </div>
-                    <div class="form-group col-md-3">
+                    <div class="form-group">
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" name="gridCheck">
                             <label class="form-check-label" for="gridCheck">Require Recipiant Signature?</label>
+                        </div>
+                    </div>
+                    <label for="value">Declared Value</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">$</span>
+                        </div>
+                        <input type="text" class="form-control" name="value" id="value" aria-label="Amount (to the nearest dollar)">
+                        <div class="input-group-append">
+                            <span class="input-group-text">.00</span>
                         </div>
                     </div>
                     <hr>

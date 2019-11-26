@@ -2,6 +2,7 @@
 
 /** Define constants for mongoDB connection
  *  You may need to change mongoURI if you did not use default mongo set-up
+ *  Todo: move to a separate file
  */
 const mongoURI = 'mongodb://localhost:27017/test' // 27027 default mongoDB port database name = 'test'
 const port = process.env.PORT || 8080; // use port 8080 unless a preconfigure port exists
@@ -10,7 +11,6 @@ const port = process.env.PORT || 8080; // use port 8080 unless a preconfigure po
 const bodyParser = require('body-parser'); // package to handle form input from user
 const colors = require('colors'); // because I like colored console messages
 const express  = require('express'); // simple web framework to make my life easier 
-const expressValidator = require('express-validator'); // middleware to validate user input on server-side
 const flash = require('express-flash'); // middleware for handling single read messages to the client
 const mongoose = require('mongoose'); 
 const morgan = require('morgan'); // for logging requests
@@ -38,6 +38,7 @@ mongoose.connection.on("error", function(err) {
 });
 
 // define connection options
+// figure out why some of these are ignore | remove options 
 const options = {
     useNewUrlParser: true, // use new parser (underlying mongoDB driver has depriciated)
     useUnifiedTopology: true,
@@ -62,7 +63,7 @@ mongoose.connect(mongoURI, options)
 // tell mongoose to use ES6-Promise for asynchronous commands
 mongoose.Promise = global.Promise
 
-// 
+// import passport config, how we persist user login information
 require('./config/passport')(passport); 
 
 /** create expressapp */
@@ -73,6 +74,7 @@ app.use(bodyParser.json()); // get information from html forms
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.set('view engine', 'ejs'); // set up ejs for templating
+
 
 app.use(session({
     secret: 'aReallYbiGsecRet', // session secret
@@ -85,7 +87,6 @@ app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
 
 app.use(flash()); // use express-flash for flash messages stored in session
-app.use(expressValidator())
 
 // define how to print response time to terminal
 app.use(responseTime(function (req, res, time) {

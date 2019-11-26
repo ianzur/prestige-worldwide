@@ -28,39 +28,145 @@
             <a class="nav-link" href="/ship">Ship Package</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link active" href="/track">Track Package</a>
+            <a class="nav-link active" href="/track" style="background-color:#E9ECEF;"><strong>Track Package</strong></a>
         </li>
     </ul>
     
-    <br>
-    <!-- display any error messages, if they exist -->
-    <% if(locals.messages.error) { %>
-        <% for(var i=0; i < locals.messages.error.length; i++) { %>
-        <div class="alert alert-danger" role="alert">
-            <strong><%=locals.messages.error[i]%></strong>
-        </div>
-        <% } %>
-    <% } %>
-
-    <!-- display any success messages, if they exist -->
-    <% if(locals.messages.success) { %>
-        <% for(var i=0; i < locals.messages.success.length; i++) { %>
-        <div class="alert alert-success" role="alert">
-            <strong><%=locals.messages.success[i]%></strong>
-        </div>
-        <% } %>
-    <% } %>
-    <br>
-
     <div class="row">
-
         <!-- Tracking INFORMATION -->
         <div class="col-sm-12">
             <div class="jumbotron">
-                <h2>Track Packages</h2>
-                    <p>
-                       Put packages here (if they exist) stuff here
-                    </p>
+                <div class="d-flex justify-content-between">
+                    <h2>Track Packages</h2>
+                    <form class="form-inline">
+                        <label class="sr-only" for="pkgID">Package ID</label>
+                        <div class="input-group mb-2 mr-sm-2">
+                            <input type="text" class="form-control" id="pkgID" placeholder="_id">
+                        </div>
+                                    
+                        <button type="submit" class="btn btn-primary mb-2">Search</button>
+                    </form>
+                </div>
+
+                <!-- display any error messages, if they exist -->
+                <% if(locals.messages.error) { %>
+                    <% for(var i=0; i < locals.messages.error.length; i++) { %>
+                    <div class="alert alert-danger" role="alert">
+                        <strong><%=locals.messages.error[i]%></strong>
+                    </div>
+                    <% } %>
+                <% } %>
+            
+                <!-- display any success messages, if they exist -->
+                <% if(locals.messages.success) { %>
+                    <% for(var i=0; i < locals.messages.success.length; i++) { %>
+                    <div class="alert alert-success" role="alert">
+                        <strong><%=locals.messages.success[i]%></strong>
+                    </div>
+                    <% } %>
+                <% } %>
+                <hr>
+
+                <% if(locals.pkgs.length !== 0) { %>
+                    <h3>Recieving</h3>
+                    <% for(var i=0; i < locals.pkgs.length; i++) { %>
+                        <% if(locals.pkgs[i].to.contact.email === user.email) { %>
+                            <div class="alert alert-primary" role="alert">
+                                <div class="d-flex justify-content-center">
+                                    <strong>ID#: <%= locals.pkgs[i]._id%></strong>
+                                </div>
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <strong>From: <%= locals.pkgs[i].from.name %></strong>
+                                        <address>
+                                            <%= locals.pkgs[i].from.street %>
+                                            <%= locals.pkgs[i].from.street2 %><br>
+                                            <%= (locals.pkgs[i].from.city + ', ' + locals.pkgs[i].from.state + ' ' + locals.pkgs[i].from.zip) %><br>
+                                            <%= locals.pkgs[i].from.country %>
+                                        </address>
+                                    </div>
+
+                                    <ul class="list-group list-group-horizontal-md">
+                                        <% for(var ii=0; ii < locals.pkgs[i].locations.length; ii++) { %>
+                                            <li class="list-group-item">
+                                                <p class="text-center">
+                                                        <%= locals.pkgs[i].locations[ii].kind %><br>
+                                                </p>
+                                                <small class="text-muted">
+                                                    <%= locals.pkgs[i].locations[ii].timestamp.toDateString() %>
+                                                </small>
+                                            </li>
+                                        <% } %>    
+                                    </ul>
+
+
+                                    <div>
+                                        <strong>To: <%= locals.pkgs[i].to.contact.name %></strong>
+                                        <address>
+                                            <%= locals.pkgs[i].to.street %>
+                                            <%= locals.pkgs[i].to.street2 %><br>
+                                            <%= (locals.pkgs[i].to.city + ', ' + locals.pkgs[i].to.state + ' ' + locals.pkgs[i].to.zip) %><br>
+                                            <%= locals.pkgs[i].to.country %>
+                                        </address>
+                                    </div>
+                                </div>
+                            </div>
+                        <% } %>
+                    <% } %>
+                    <hr>
+                    <h3>Sent</h3>
+                    <% for(var i=0; i < locals.pkgs.length; i++) { %>
+                        <% if(locals.pkgs[i].from.contact.email === user.email) { %>
+                            <div class="alert alert-primary" role="alert">
+                                <div class="d-flex justify-content-center">
+                                    <strong>ID#: <%= locals.pkgs[i]._id%></strong>
+                                </div>
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <strong>From: <%= user.fullName %></strong>
+                                        <address>
+                                            <%= locals.pkgs[i].from.street %>
+                                            <%= locals.pkgs[i].from.street2 %><br>
+                                            <%= (locals.pkgs[i].from.city + ', ' + locals.pkgs[i].from.state + ' ' + locals.pkgs[i].from.zip) %><br>
+                                            <%= locals.pkgs[i].from.country %>
+                                        </address>
+                                    </div>
+
+                                    <ul class="list-group list-group-horizontal-md">
+                                        <% for(var ii=0; ii < locals.pkgs[i].locations.length; ii++) { %>
+                                            <li class="list-group-item">
+                                                <p class="text-center">
+                                                        <%= locals.pkgs[i].locations[ii].kind %><br>
+                                                </p>
+                                                <small class="text-muted">
+                                                    <%= locals.pkgs[i].locations[ii].timestamp.toDateString() %>
+                                                </small>
+                                            </li>
+                                        <% } %>    
+                                    </ul>
+
+                                    <div>
+                                        <strong>To: <%= locals.pkgs[i].to.contact.name %></strong>
+                                        <address>
+                                            <%= locals.pkgs[i].to.street %>
+                                            <%= locals.pkgs[i].to.street2 %><br>
+                                            <%= (locals.pkgs[i].to.city + ', ' + locals.pkgs[i].to.state + ' ' + locals.pkgs[i].to.zip) %><br>
+                                            <%= locals.pkgs[i].to.country %>
+                                        </address>
+                                    </div>
+                                </div>
+                            </div>
+                        <% } %>
+                    <% } %>
+                   
+                <% } else { %>
+                    <p>No packages found.</p>
+                <% } %>
+
+
+
+
+                <hr>
             </div>
         </div>
     </div>

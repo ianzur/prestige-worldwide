@@ -17,48 +17,35 @@ var PackageSchema = new mongoose.Schema({
 
 	// where to pick-up
 	from: {
-		// shipping from
-		name: {
-			type: String,
-			required: true,
-		},
+		name: {	type: String, required: true },
+		email: { type: String, required: true, index: true },
+		phone: { type: String, required: true},
 		country: {
 			type: String,
-			// we can only ship to these countrys
+			// we can only ship to these countries
 			enum: [
 				'United States',
 				'Spain',
 				'Canada',
 				'Mexico',
-				'Puetro Rico',
+				'Puerto Rico',
 			],
 			default: 'United States',
 			required: true
 		},
 		street: { type: String, required: true },
-		type: {	type: String },
+		street2: {	type: String },
 		city: {	type: String, required: true },
 		state: { type: String, required: true },
 		zip: { type: Number, required: true },
-		phone: {
-			type: String,
-			validate: {
-			  validator: function(v) {
-				return /\d{3}-\d{3}-\d{4}/.test(v);
-			  },
-			  message: props => `${props.value} is not a valid phone number!`
-			},
-			required: [true, 'User phone number required']
-		},
 	},
 
 	// where to drop off
 	to: {
-		// shipping to
-		name: {
-			type: String,
-			required: true,
-		},
+		
+		name: {	type: String, required: true },
+		email: { type: String, required: true, index: true },
+		phone: { type: String, required: true},
 		country: {
 			type: String,
 			// we can only ship to these countrys
@@ -67,25 +54,17 @@ var PackageSchema = new mongoose.Schema({
 				'Spain',
 				'Canada',
 				'Mexico',
-				'Puetro Rico',
+				'Puerto Rico',
 			],
 			default: 'United States',
 			required: true
 		},
 		street: { type: String, required: true },
-		type: {	type: String },
+		street2: {	type: String },
 		city: {	type: String, required: true },
 		state: { type: String, required: true },
 		zip: { type: Number, required: true },
 		phone: {
-			type: String,
-			validate: {
-			  validator: function(v) {
-				return /\d{3}-\d{3}-\d{4}/.test(v);
-			  },
-			  message: props => `${props.value} is not a valid phone number!`
-			},
-			required: [true, 'User phone number required']
 		},
 	}, 
 
@@ -96,18 +75,51 @@ var PackageSchema = new mongoose.Schema({
 	},
 
 	// location history
-  	location: [
-    	{
-			type: String,
-			enum: ['plane', 'airport', 'truck', 'warehouse'],
+  	locations: [
+		{
+			kind: {
+				type: String,
+				enum: ['plane', 'airport', 'truck', 'warehouse'],
+				required: true,
+				default: 'plane',
+			},
 			timestamp: {
 				type: Date,
 				default: Date.now(),
-				required: true
+				required: true,
 			},
-			required: true
 		}
-	]
+	],
+});
+
+PackageSchema.path('locations.timestamp').validate( function(v) {
+	console.log(v)
+	console.log(this.locations)
 })
+
+// PackageSchema.query.locations
+
+
+// before doing anything add some locations to history
+// this should be done by admin account "add update function"
+PackageSchema.pre('validate', function(next) {
+
+	var numlocs = Math.floor(Math.random() * 4);
+	var locations = ['plane', 'airport', 'truck', 'warehouse'];
+	var date = new Date();
+
+	if (numlocs === 0) {
+		numlocs = 1;
+	}
+
+	for (var i = 0; i < numlocs + 1; i++) {
+		this.locations.push({ 
+			'kind': locations[Math.floor(Math.random() * 4)],
+			'timestamp': date.setDate(date.getDate() + 1)  
+		})
+	}
+	console.log(this)
+	next()
+});
 
 module.exports = mongoose.model('Package', PackageSchema);
