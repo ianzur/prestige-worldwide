@@ -39,13 +39,14 @@
                 <div class="d-flex justify-content-between">
                     <h2>Track Packages</h2>
                     <form action="/track/:" class="form-inline">
-                        <div class="form-check form-check-inline">
+                        <!-- Future Todo: add "delivered" boolean -->
+                        <!-- <div class="form-check form-check-inline">
                             <input class="form-check-input" type="checkbox" id="inlineCheckbox1" name="delivered">
                             <label class="form-check-label" for="inlineCheckbox1">Delivered?</label>
-                        </div>
+                        </div> -->
                         <div class="col">
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="radioOptions" id="radio" value="from.email" checked>
+                                <input class="form-check-input" type="radio" name="radioOptions" id="radio" value="from.email">
                                 <label class="form-check-label" for="inlineCheckbox1">Sent</label>
                             </div>
                             <div class="form-check form-check-inline">
@@ -80,8 +81,7 @@
                 <% } %>
                 <hr>
 
-
-
+                <!-- display any packages found -->
                 <% if(locals.pkgs.length !== 0) { %>
                     <% for(var i=0; i < locals.pkgs.length; i++) { %>
                         <div class="alert alert-primary" role="alert">
@@ -124,14 +124,8 @@
                             </div>
                         </div>
                     <% } %>
-                <% } else { %>
-                    <p>No packages found.</p>
+                    <hr>
                 <% } %>
-
-
-
-
-                <hr>
             </div>
         </div>
     </div>

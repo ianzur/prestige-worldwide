@@ -58,7 +58,7 @@ module.exports = function(app, passport) {
 
             if (req.query.radioOptions === 'from.email') {
                 query['from.email'] = req.user.email;
-            } else {
+            } else if (req.query.radioOptions === 'to.email') {
                 query['to.email'] = req.user.email;
             }
 
