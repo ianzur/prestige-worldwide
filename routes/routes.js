@@ -23,12 +23,13 @@ module.exports = function(app, passport) {
     app.get('/track', isLoggedIn, function(req, res) {
 
         Package.find().or([
-            {'from.contact.email': req.user.email},
-            {'to.contact.email': req.user.email}
+            {'from.email': req.user.email},
+            {'to.email': req.user.email}
         ]).exec(
             function(err, items) {
                 if (err) { return res.send(500, err) }
                 if (items) {
+                    console.log(items)
                     res.render('track.ejs', {
                         user : req.user,
                         messages: req.flash(),
