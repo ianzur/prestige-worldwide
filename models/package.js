@@ -14,6 +14,7 @@ var PackageSchema = new mongoose.Schema({
 	},
 
 	value: { type: Number },
+	// delivered: {}
 
 	// where to pick-up
 	from: {

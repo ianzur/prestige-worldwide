@@ -20,42 +20,64 @@ module.exports = function(app, passport) {
     });
 
     // TRACK PACKAGE
-    app.get('/track', isLoggedIn, function(req, res) {
-
-        Package.find().or([
-            {'from.email': req.user.email},
-            {'to.email': req.user.email}
-        ]).exec(
-            function(err, items) {
-                if (err) { return res.send(500, err) }
-                if (items) {
-                    console.log(items)
-                    res.render('track.ejs', {
-                        user : req.user,
-                        messages: req.flash(),
-                        pkgs: items,
-                    });
-                }
-            }
-        )
-        
+    app.get('/track', [
+        isLoggedIn,
+    ], function(req, res) {
+        res.render('track.ejs', {
+            user : req.user,
+            messages: req.flash(),
+            pkgs: [],
+        });
     });
 
-    app.get('/track/:pkgID', isLoggedIn, function(req, res) {
+    app.get('/track/:', [
+        isLoggedIn,
+        check('pkgID')
+            .optional({ nullable: true, checkFalsy: true})
+            .isAlphanumeric().withMessage('package ID only contains letters and numbers')
+            .isLength({ min: 24, max: 24 }).withMessage('package ID is incorrect length'),
+    ], function(req, res) {
 
-        Package.find({ '_id': req.params.pkgID}).exec(
-            function(err, items) {
-                if (err) { return res.send(500, err) }
-                if (items) {
-                    res.render('track.ejs', {
-                        user : req.user,
-                        messages: req.flash(),
-                        pkgs: items,
-                    });
-                }
-            }
-        )
+        var query = {}
         
+        // handle data validation errors
+        var errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            var messages = [];
+            errors.array().forEach(function(error){
+                console.log(error);
+                messages.push(error.msg);
+            });
+            req.flash('error', messages);
+            res.redirect('/track');
+        } else { // no data errors -> build query string and query data
+
+            if (req.query.pkgID !== '') {
+                query['_id'] = req.query.pkgID
+            }
+
+            if (req.query.radioOptions === 'from.email') {
+                query['from.email'] = req.user.email;
+            } else {
+                query['to.email'] = req.user.email;
+            }
+
+            // if (req.query.delivered) {
+            //     query['delivered'] = true;
+            // }
+
+            Package.find(query).exec(
+                function(err, items) {
+                    if (err) { return res.send(500, err) }
+                    if (items) {
+                        res.render('track.ejs', {
+                            user : req.user,
+                            messages: req.flash(),
+                            pkgs: items,
+                        });
+                    }
+                });
+        }     
     });
   
     // SHIP PACKAGE
@@ -85,10 +107,10 @@ module.exports = function(app, passport) {
                 return true; 
             }),
         check('phoneFrom')
-            .blacklist('A-z\\s-+.') //remove any non-numerics, -, +, . 
-            .trim()
-            .isNumeric({ no_symbols: true }).withMessage('please remove symbols from your phone number')
-            .isLength({max: 14}).withMessage('too many digits in your phone number'),
+            .blacklist('A-z\\s-+.#') //remove any non-numerics, -, +, . 
+            .trim(),
+            // .isNumeric({ no_symbols: true }).withMessage('please remove symbols from your phone number'),
+            // .isLength({max: 14}).withMessage('too many digits in your phone number'),
         check('addressFrom')
             .not().isEmpty().withMessage('Must contain from address'),
         check('cityFrom')
@@ -108,10 +130,10 @@ module.exports = function(app, passport) {
             .isEmail()    
             .normalizeEmail(), // canonicalizes an email address (validatorjs)
         check('phoneTo')
-            .blacklist('A-z\\s-+.') //remove any non-numerics, -, +, . 
-            .trim()
-            .isNumeric({ no_symbols: true }).withMessage('please remove symbols from your phone number')
-            .isLength({max: 14}).withMessage('too many digits in your phone number'),
+            .blacklist('A-z\\s-+.#') //remove any non-numerics, -, +, . 
+            .trim(),
+            // .isNumeric({ no_symbols: true }).withMessage('please remove symbols from your phone number'),
+            // .isLength({max: 14}).withMessage('too many digits in your phone number'),
         check('addressTo')
             .not().isEmpty().withMessage('Must contain To address'),
         check('cityTo')
@@ -171,8 +193,7 @@ module.exports = function(app, passport) {
             });
 
             req.flash('success', 'Package shipped! (added to database)');
-            res.redirect('/track');
-
+            res.redirect('/ship');
         }
         
       
