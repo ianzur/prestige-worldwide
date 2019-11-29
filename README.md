@@ -7,17 +7,8 @@ You have to install the following:
 * [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
 
 ## Setup instructions
-This will work:
-
 ```
 git clone git@github.com:ianzur/prestige-worldwide.git
 cd prestige-worldwide
 npm install
 ```
-
-## TODO:
-1. Add ship package backend
-2. Add track package front and back
-2. Add testing
-    - user side (record time it take for request to get to user)
-3. Add AdimBro package?? 
