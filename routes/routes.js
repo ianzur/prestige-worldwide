@@ -31,7 +31,7 @@ module.exports = function(app, passport) {
     // TRACK PACKAGE
     app.get('/track', [
         isLoggedIn,
-        check('pkgID')
+        check('pkgID') // validate that package ID is the correct length and contains only alphanumerics
             .optional({ nullable: true, checkFalsy: true})
             .isAlphanumeric().withMessage('package ID only contains letters and numbers')
             .isLength({ min: 24, max: 24 }).withMessage('package ID is incorrect length'),
@@ -62,11 +62,6 @@ module.exports = function(app, passport) {
                 query['to.email'] = req.user.email;
             } 
 
-            // Future
-            // if (req.query.delivered) {
-            //     query['delivered'] = true;
-            // }
-
             // console.log(req.query.pkgID);
             // console.log(query);
             // console.log(Object.entries(query).length);
@@ -94,53 +89,6 @@ module.exports = function(app, passport) {
             
         }     
     });
-
-    // app.get('/track/:', [
-    //     isLoggedIn,
-        
-    // ], function(req, res) {
-
-    //     var query = {}
-        
-    //     // handle data validation errors
-    //     var errors = validationResult(req);
-    //     if (!errors.isEmpty()) {
-    //         var messages = [];
-    //         errors.array().forEach(function(error){
-    //             console.log(error);
-    //             messages.push(error.msg);
-    //         });
-    //         req.flash('error', messages);
-    //         res.redirect('/track');
-    //     } else { // no data errors -> build query string and query data
-
-    //         if (req.query.pkgID !== '') {
-    //             query['_id'] = req.query.pkgID
-    //         }
-
-    //         if (req.query.radioOptions === 'from.email') {
-    //             query['from.email'] = req.user.email;
-    //         } else if (req.query.radioOptions === 'to.email') {
-    //             query['to.email'] = req.user.email;
-    //         }
-
-    //         // if (req.query.delivered) {
-    //         //     query['delivered'] = true;
-    //         // }
-
-    //         Package.find(query).exec(
-    //             function(err, items) {
-    //                 if (err) { return res.send(500, err) }
-    //                 if (items) {
-    //                     res.render('track.ejs', {
-    //                         user : req.user,
-    //                         messages: req.flash(),
-    //                         pkgs: items,
-    //                     });
-    //                 }
-    //             });
-    //     }     
-    // });
   
     // SHIP PACKAGE
     app.get('/ship', isLoggedIn, function(req, res) {
@@ -171,8 +119,6 @@ module.exports = function(app, passport) {
         check('phoneFrom')
             .blacklist('A-z\\s-+.#') //remove any non-numerics, -, +, . 
             .trim(),
-            // .isNumeric({ no_symbols: true }).withMessage('please remove symbols from your phone number'),
-            // .isLength({max: 14}).withMessage('too many digits in your phone number'),
         check('addressFrom')
             .not().isEmpty().withMessage('Must contain from address'),
         check('cityFrom')
@@ -194,8 +140,6 @@ module.exports = function(app, passport) {
         check('phoneTo')
             .blacklist('A-z\\s-+.#') //remove any non-numerics, -, +, . 
             .trim(),
-            // .isNumeric({ no_symbols: true }).withMessage('please remove symbols from your phone number'),
-            // .isLength({max: 14}).withMessage('too many digits in your phone number'),
         check('addressTo')
             .not().isEmpty().withMessage('Must contain To address'),
         check('cityTo')
@@ -254,20 +198,20 @@ module.exports = function(app, passport) {
                 if (error) { return done(error) }
             });
 
-            req.flash('success', 'Package shipped! (added to database)');
+            req.flash('success', 'Package ID# ' + newPackage._id + ' shipped! (added to database)');
             res.redirect('/ship');
         }
         
       
     });
 
-    // LOGOUT ==============================
+    // LOGOUT 
     app.get('/logout', function(req, res) {
         req.logout(); // from passport module -> remove req.user property and clear login session
         res.redirect('/'); // redirect to home page
     });
    
-    // LOGIN ===============================
+    // LOGIN 
     // show the login form
     app.get('/login', function(req, res) {
         res.render('login.ejs', { 
@@ -289,7 +233,7 @@ module.exports = function(app, passport) {
         failureFlash : true // allow flash messages
     }));
 
-    // SIGNUP =================================
+    // SIGNUP
     // show the signup form
     app.get('/signup', function(req, res) {
         res.render('signup.ejs', { 
@@ -353,5 +297,6 @@ function isLoggedIn(req, res, next) {
     if (req.isAuthenticated())
         return next();
 
+    // if not authenticated redirect to home page
     res.redirect('/');
 }
