@@ -1,6 +1,6 @@
 /** passport.js
  *
- * configure passport stratageey
+ * configure passport strategy
  * 
  * Ian Zurutuza
  * last modified: 29 Nov 2019
