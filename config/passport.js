@@ -24,8 +24,7 @@ module.exports = function(passport) {
      *  
      * @param {object} user - user info
      * @param done - informs that the task is completed.
-     * 
-     *  */ 
+     */ 
     passport.serializeUser(function(user, done) {
         done(null, user.id);
     });
@@ -35,7 +34,7 @@ module.exports = function(passport) {
      *  
      * @param {string} id - user id 
      * @param done - informs that the task is completed.
-     * */
+     */
     passport.deserializeUser(function(id, done) {
         User.findById(id, function(err, user) {
             done(err, user);
@@ -107,7 +106,7 @@ module.exports = function(passport) {
             return done(null, false, req.flash('error', messages));
         }
 
-        console.log(req.body.phone)
+        // console.log(req.body.phone)
  
         // check if user exists
         process.nextTick(function() {
