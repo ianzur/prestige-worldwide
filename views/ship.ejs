@@ -57,7 +57,7 @@
                     <% } %>
                 <% } %>
                 <br>
-                <!--  from address -->
+                <!--  from address form -->
                 <h5>Where are you shipping from?</h5>
                 <form action="/ship" method="post">
                     <div class="form-row">
@@ -76,11 +76,11 @@
                     </div>
                     <div class="form-group">
                         <label for="inputAddress">Address</label>
-                        <input type="text" class="form-control" value="123 Main St." name="addressFrom" placeholder="1234 Main St. " required>
+                        <input type="text" class="form-control" value="321 Sesame Street" name="addressFrom" placeholder="1234 Main St. " required>
                     </div>
                     <div class="form-group">
                         <label for="inputAddress2">Address 2</label>
-                        <input type="text" class="form-control" value="Apt. #3" name="address2From" placeholder="Apartment, studio, or floor">
+                        <input type="text" class="form-control" name="address2From" placeholder="Apartment, studio, or floor?">
                     </div>
                     <div class="form-row">
                         <div class="form-group col-md-6">
@@ -89,8 +89,8 @@
                         </div>
                         <div class="form-group col-md-4">
                             <label for="inputState">State | Province</label>
-                            <input type="text" class="form-control" value="TX" name="stateFrom" required>
-                        <!-- future: select state or province From list -->
+                            <input type="text" class="form-control" value="Texas" name="stateFrom" required>
+                        <!-- future: select state or province from a defined list -->
                         <!-- <select name="inputState" class="form-control">
                             <option selected>Choose...</option>
                             <option>...</option>
@@ -98,7 +98,7 @@
                         </div>
                         <div class="form-group col-md-2">
                             <label for="inputZip">Postal Code</label>
-                            <input type="text" class="form-control" value="76207" name="zipFrom" required>
+                            <input type="text" class="form-control" value="75444" name="zipFrom" required>
                         </div>
                     </div>
                     <div class="form-row">
@@ -112,39 +112,39 @@
                     <hr>
                     <br>   
                     
-                    <!-- To address -->
+                    <!-- To address form -->
                     <h5>Where are you shipping to?</h5>
                     <div class="form-row">
                         <div class="form-group col-md-4">
                             <label for="name">Name</label>
-                            <input type="text" class="form-control" value="Reciptiant" name="nameTo" placeholder="e.g. 'John Smith'">
+                            <input type="text" class="form-control" value="Michael Bay" name="nameTo" placeholder="e.g. 'John Smith'">
                         </div>
                         <div class="form-group col-md-4">
                             <label for="email">Email</label>
-                            <input type="email" class="form-control" value="test@test.com" name="emailTo" placeholder="e.g. 'ex@mple.com'" required>
+                            <input type="email" class="form-control" value="m@bay.com" name="emailTo" placeholder="e.g. 'ex@mple.com'" required>
                         </div>
                         <div class="form-group col-md-4">
                             <label for="phone">Phone</label>
-                            <input type="tel" class="form-control" value="123-456-7890" name="phoneTo" placeholder="'469-666-3456' or '3336669999'" required>
+                            <input type="tel" class="form-control" value="222-333-4444" name="phoneTo" placeholder="'469-666-3456' or '3336669999'" required>
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="inputAddress">Address</label>
-                        <input type="text" class="form-control" value="123 Main St." name="addressTo" placeholder="1234 Main St. " required>
+                        <input type="text" class="form-control" value="Mariaratzalde Aldea, 3" name="addressTo" placeholder="1234 Main St. " required>
                     </div>
                     <div class="form-group">
                         <label for="inputAddress2">Address 2</label>
-                        <input type="text" class="form-control" value="Apt. #1" name="address2To" placeholder="Apartment, studio, or floor">
+                        <input type="text" class="form-control" name="address2To" placeholder="Apartment, studio, or floor">
                     </div>
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <label for="inputCity">City</label>
-                            <input type="text" class="form-control" value="Denton" name="cityTo" required>
+                            <input type="text" class="form-control" value="Ordiza" name="cityTo" required>
                         </div>
                         <div class="form-group col-md-4">
                             <label for="inputState">State | Province</label>
-                            <input type="text" class="form-control" value="Texas" name="stateTo" required>
-                        <!-- future: select state or province To list -->
+                            <input type="text" class="form-control" value="Gipuzkoa" name="stateTo" required>
+                        <!-- future: select state or province from a defined list -->
                         <!-- <select name="inputState" class="form-control">
                             <option selected>Choose...</option>
                             <option>...</option>
@@ -152,36 +152,36 @@
                         </div>
                         <div class="form-group col-md-2">
                             <label for="inputZip">Postal Code</label>
-                            <input type="text" class="form-control" value="75032" name="zipTo" required>
+                            <input type="text" class="form-control" value="20240" name="zipTo" required>
                         </div>
                     </div>
                     <div class="form-row">
                         <label for=countryTo>Country</label>
                         <select class="form-control" name=countryTo>
-                            <option>United States</option>
                             <option>Spain</option>
+                            <option>United States</option>
                         </select>
                     </div>
                     <hr>
                 
-                    <!-- Package information -->
+                    <!-- Package information form -->
                     <h5>What kind of packaging are you using?</h5>
                     <div class="form-row">
                         <div class="form-group col-md">
                             <label for="weight">weight</label>
-                            <input type="text" class="form-control" name="weight" placeholder="lbs">
+                            <input type="text" class="form-control" value="72" name="weight" placeholder="lbs">
                         </div>
                         <div class="form-group col-md">
                             <label for="email">width</label>
-                            <input type="text" class="form-control" name="width" placeholder="inches">
+                            <input type="text" class="form-control" value="24" name="width" placeholder="inches">
                         </div>
                         <div class="form-group col-md">
                             <label for="length">length</label>
-                            <input type="text" class="form-control" name="length" placeholder="inches">
+                            <input type="text" class="form-control" value="24" name="length" placeholder="inches">
                         </div>
                         <div class="form-group col-md">
                             <label for="height">height</label>
-                            <input type="text" class="form-control" name="height" placeholder="inches">
+                            <input type="text" class="form-control" value="36" name="height" placeholder="inches">
                         </div>
                     </div>
                     <div class="form-group">
