@@ -1,4 +1,4 @@
-process.env.NODE_ENV = 'test';
+// process.env.NODE_ENV = 'test';
 
 //inside tests/test_helper.jsconst 
 mongoose = require('mongoose');

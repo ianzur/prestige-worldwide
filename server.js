@@ -1,10 +1,18 @@
-// server.js
+/** server.js
+ * 
+ * main, run project with "node server.js" 
+ * 
+ * Ian Zurutuza
+ * last modified: 29 Nov 2019
+ */
 
-/** Define constants for mongoDB connection
- *  You may need to change mongoURI if you did not use default mongo set-up
- *  Todo: move to a separate file
+ 
+/** 
+ * Define constants for mongoDB connection
+ * You may need to change mongoURI if you did not use default mongo set-up
  */
 const mongoURI = 'mongodb://localhost:27017/test' // 27027 default mongoDB port database name = 'test'
+
 const port = process.env.PORT || 8080; // use port 8080 unless a preconfigure port exists
 
 /* Import required packages */
@@ -16,14 +24,6 @@ const mongoose = require('mongoose');
 const morgan = require('morgan'); // for logging requests
 const passport = require('passport'); // package to keep authentication simple
 const session = require('express-session'); // package to persist user data server-side by saving an ID in the clients cookies 
-const responseTime = require('response-time') //package to record response time for requests
-const StatsD = require('node-statsd') // package to calculate statistics
-
-var stats = new StatsD()
-
-stats.socket.on('error', function (error) {
-    console.error(error.stack)
-});
 
 /* Configure and connect to mongodb with mongoose package */
 // listen for connection success
@@ -38,12 +38,10 @@ mongoose.connection.on("error", function(err) {
 });
 
 // define connection options
-// figure out why some of these are ignore | remove options 
 const options = {
     useNewUrlParser: true, // use new parser (underlying mongoDB driver has depriciated)
-    useUnifiedTopology: true,
+    useUnifiedTopology: true, // add this to silence depriciation warning
     useCreateIndex: true, // use createindex() instead of ensureindex() 
-    useFindAndModify: false,
     autoIndex: true, // build indexes
 }
 
@@ -62,11 +60,12 @@ require('./config/passport')(passport);
 const app = express()
 
 app.use(morgan('dev')); // formate logger output
-app.use(bodyParser.json()); // get information from html forms
+
+// get information from html forms (set up body-parser)
+app.use(bodyParser.json()); 
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.set('view engine', 'ejs'); // set up ejs for templating
-
 
 app.use(session({
     secret: 'aReallYbiGsecRet', // session secret
@@ -76,23 +75,12 @@ app.use(session({
 
 // required for passport
 app.use(passport.initialize());
-app.use(passport.session()); // persistent login sessions
+app.use(passport.session()); // persist login sessions
 
 app.use(flash()); // use express-flash for flash messages stored in session
-
-// define how to print response time to terminal
-app.use(responseTime(function (req, res, time) {
-    var stat = (req.method + req.url).toLowerCase()
-      .replace(/[:.]/g, '')
-      .replace(/\//g, '_')
-    stats.timing(stat, time)
-})); 
 
 require('./routes/routes.js')(app, passport); // load our routes and pass in our app and configured passport
 
 // launch app
-
-
-
 app.listen(port);
 console.log('site launched at: ' + ('http://localhost:' + String(port)).cyan);

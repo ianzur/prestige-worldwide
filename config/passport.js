@@ -1,3 +1,11 @@
+/** passport.js
+ *
+ * configure passport stratageey
+ * 
+ * Ian Zurutuza
+ * last modified: 29 Nov 2019
+ */
+
 // required packages
 const { check, validationResult } = require('express-validator');
 var LocalStrategy = require('passport-local').Strategy;
@@ -7,23 +15,41 @@ var User = require('../models/user');
 
 module.exports = function(passport) {
 
-    // required for persistent login sessions
-    // passport needs ability to serialize and unserialize users out of session
+    // serialize & deserialize required for persistent login sessions
+    // passport needs ability to serialize and deserialize users
     // See: http://www.passportjs.org/docs/
 
-    // used to serialize the user for the session
+    /** 
+     * used to serialize the user for the session
+     *  
+     * @param {object} user - user info
+     * @param done - informs that the task is completed.
+     * 
+     *  */ 
     passport.serializeUser(function(user, done) {
         done(null, user.id);
     });
 
-    // used to deserialize the user
+    /** 
+     * used to deserialize the user
+     *  
+     * @param {string} id - user id 
+     * @param done - informs that the task is completed.
+     * */
     passport.deserializeUser(function(id, done) {
         User.findById(id, function(err, user) {
             done(err, user);
         });
     });
 
-    // LOGIN
+    /**
+     * LOGIN
+     * 
+     * @param {object} req - request
+     * @param {string} email - user email
+     * @param {string} password - user password
+     * @param done - informs that the task is completed.
+     */
     passport.use('login', new LocalStrategy({
         usernameField : 'email', // by default, local strategy uses username and password, we are using email
         passwordField : 'password',
@@ -56,7 +82,14 @@ module.exports = function(passport) {
         });
     }));
 
-    // Create new user 
+    /**
+     * Sign-up
+     * 
+     * @param {objects} req - request
+     * @param {string} email - user email
+     * @param {string} password - user password
+     * @param done - informs that the task is completed.
+     */
     passport.use('signup', new LocalStrategy({
         usernameField : 'email', // by default, local strategy uses username and password, we are using email
         passwordField : 'password',

@@ -1,3 +1,11 @@
+/** user.js
+ * 
+ * define user schema
+ * 
+ * Ian Zurutuza
+ * last modified: 29 Nov 2019
+ */
+
 // load the things we need
 var mongoose = require('mongoose');
 var bcrypt   = require('bcrypt');
@@ -25,18 +33,28 @@ var userSchema = mongoose.Schema({
     
 });
 
-// hash the password
+/**
+ * Hash a password
+ * 
+ * @param {string} password - a users password
+ */
 userSchema.methods.generateHash = function(password) {
     return bcrypt.hashSync(password, bcrypt.genSaltSync(10), null);
 };
 
-// checking if password is valid
+/**
+ * checking if password is valid
+ * 
+ * @param {string} password - a users password
+ */
 userSchema.methods.verifyPassword = function(password) {
     return bcrypt.compareSync(password, this.password);
 };
 
 
-// return full name of user
+/**
+ * return full name of user
+ */
 userSchema.virtual('fullName').get( function () {
 
     if (this.name.last && this.name.middle)
@@ -52,28 +70,30 @@ userSchema.virtual('fullName').get( function () {
 });
 
 
-// return phone number as a human-readable string
-// eg. +1 214-435-7292 (ext#12)
+/** 
+ * return phone number as a human-readable string
+ * eg. +1 214-435-7292 (ext#12)
+ **/ 
 userSchema.virtual('readablePhone').get( function () {
 
-    var emptyString = "";
+    var readablePhone = "";
     var phoneNumber = this.phone.number;
 
     if (phoneNumber.length > 10) { // remove country code
         var countryCode = phoneNumber.length - 10
-        emptyString = emptyString.concat('+', phoneNumber.substring(0,countryCode), ' ')
+        readablePhone = readablePhone.concat('+', phoneNumber.substring(0,countryCode), ' ')
         phoneNumber = phoneNumber.substring(countryCode)
     }
 
     // add rest of number back to string
-    emptyString = emptyString.concat(phoneNumber.substring(0,3), '-', phoneNumber.substring(3,6), '-', phoneNumber.substring(6))
+    readablePhone = readablePhone.concat(phoneNumber.substring(0,3), '-', phoneNumber.substring(3,6), '-', phoneNumber.substring(6))
     
     // add extension
     if (this.phone.ext) {
-        emptyString = emptyString.concat(' (ext#', this.phone.ext, ')')
+        readablePhone = readablePhone.concat(' (ext#', this.phone.ext, ')')
     }
 
-    return emptyString
+    return readablePhone
 });
 
 // create the model for users and expose it to our app

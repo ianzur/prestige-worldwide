@@ -1,5 +1,13 @@
+/** package.js 
+ * 
+ * Define package schema 
+ * 
+ * Ian Zurutuza
+ * last modified: 29 Nov 2019
+ */
 var mongoose = require('mongoose');
 
+// define package schema
 var PackageSchema = new mongoose.Schema({
 	
 	// packageID
@@ -14,7 +22,6 @@ var PackageSchema = new mongoose.Schema({
 	},
 
 	value: { type: Number },
-	// delivered: {}
 
 	// where to pick-up
 	from: {
@@ -93,16 +100,14 @@ var PackageSchema = new mongoose.Schema({
 	],
 });
 
-// PackageSchema.path('locations.timestamp').validate( function(v) {
-// 	console.log(v)
-// 	console.log(this.locations)
-// })
-
-// PackageSchema.query.locations
-
-
-// before doing anything add some locations to history
-// this should be done by admin account "add update function"
+/**
+ * before doing anything, add some locations to history
+ * 
+ * Future TODO:
+ * 	- add admin account with privledges to update package location
+ * 
+ * @param next - call the next route handler matching the route path
+ */
 PackageSchema.pre('validate', function(next) {
 
 	var numlocs = Math.floor(Math.random() * 4);

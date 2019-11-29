@@ -1,3 +1,11 @@
+/** routes.js
+ * 
+ * define routes
+ * 
+ * Ian Zurutuza
+ * last modified: 29 Nov 2019
+ */
+
 const { check, validationResult } = require('express-validator');
 
 var Package = require('../models/package');
@@ -11,16 +19,30 @@ Object.prototype.isEmpty = function() {
     return true;
 }
 
+/**
+ * export the following pass in app variables and passport
+ * 
+ * @param app - variables from server.js
+ * @param passport - configured passport strategy
+ */ 
 module.exports = function(app, passport) {
 
-    // show the home page (will also have our login links)
+    /** show the home page
+     * 
+     * @param {object} req - request
+     * @param {object} res - response
+     */
     app.get('/', function(req, res) {
         res.render('index.ejs', {
             messages: req.flash(),
         });
     });
 
-    // PROFILE SECTION =========================
+    /** show user profile
+     * 
+     * @param {object} req - request
+     * @param {object} res - response
+     */
     app.get('/profile', isLoggedIn, function(req, res) {
         res.render('profile.ejs', {
             user : req.user,
@@ -28,7 +50,11 @@ module.exports = function(app, passport) {
         });
     });
 
-    // TRACK PACKAGE
+    /** track a package
+     * 
+     * @param {object} req - request
+     * @param {object} res - response
+     */
     app.get('/track', [
         isLoggedIn,
         check('pkgID') // validate that package ID is the correct length and contains only alphanumerics
@@ -90,7 +116,11 @@ module.exports = function(app, passport) {
         }     
     });
   
-    // SHIP PACKAGE
+    /** show ship a package form
+     * 
+     * @param {object} req - request
+     * @param {object} res - response
+     */
     app.get('/ship', isLoggedIn, function(req, res) {
         res.render('ship.ejs', {
             user : req.user,
@@ -98,6 +128,12 @@ module.exports = function(app, passport) {
         });
     });
 
+    /** process ship a package form
+     * 
+     * @param {object} req - request
+     * @param {object} res - response
+     * @param done - informs that the task is completed.
+     */
     app.post('/ship', [
         isLoggedIn,
         // check that user is the user logged in
@@ -205,21 +241,34 @@ module.exports = function(app, passport) {
       
     });
 
-    // LOGOUT 
+    /** logout
+     * 
+     * clears login session
+     * then redirect to homepage
+     * 
+     * @param {object} req - request
+     * @param {object} res - response
+     */
     app.get('/logout', function(req, res) {
         req.logout(); // from passport module -> remove req.user property and clear login session
         res.redirect('/'); // redirect to home page
     });
    
-    // LOGIN 
-    // show the login form
+    /** show login form
+     * 
+     * @param {object} req - request
+     * @param {object} res - response
+     */
     app.get('/login', function(req, res) {
         res.render('login.ejs', { 
             messages: req.flash(),
         });
     });
 
-    // process the login form
+    /** process login form
+     * 
+     * authenticate user, see config/passport.js
+     */    
     app.post('/login', [
         check('email')
             .normalizeEmail()
@@ -233,15 +282,21 @@ module.exports = function(app, passport) {
         failureFlash : true // allow flash messages
     }));
 
-    // SIGNUP
-    // show the signup form
+    /** show sign-up form
+     * 
+     * @param {object} req - request
+     * @param {object} res - response
+     */
     app.get('/signup', function(req, res) {
         res.render('signup.ejs', { 
             messages: req.flash()
         });
     });
 
-    // process the signup form
+    /** process sign-up form
+     * 
+     * create user, see config/passport.js
+     */
     app.post('/signup', [ // first we sanitize and validate our input
         check('email', 'Misformatted email')
             .isEmail()    
@@ -272,7 +327,13 @@ module.exports = function(app, passport) {
             })
     );
 
-    // Delete User Account, irreverisible. USER IS LOST FOREVER (not their packages)
+    /** Delete user
+     *
+     * redirects to home page on success
+     * 
+     * @param {object} req - request
+     * @param {object} res - response
+     */
     app.get('/delete', isLoggedIn, function(req, res) {
 
         // delete user
@@ -288,8 +349,14 @@ module.exports = function(app, passport) {
     });
 };
 
-// route middleware to ensure user is logged in
-// https://github.com/jaredhanson/passport
+/** route middleware to ensure user is logged in
+ * 
+ * https://github.com/jaredhanson/passport
+ * 
+ * @param {object} req - request
+ * @param {object} res - response
+ * @param next - call the next route handler matching the route path
+ */
 function isLoggedIn(req, res, next) {
     // console.log('authCheck isLoggedIn() => ' + req.isAuthenticated());
 
